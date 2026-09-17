@@ -1,25 +1,47 @@
 {
   "expo": {
-    "name": "VKURoomBooking",
-    "slug": "VKURoomBooking",
+    "name": "VKU Room Booking",
+    "slug": "vku-room-booking",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#0A1628"
+    },
     "ios": {
+      "bundleIdentifier": "vn.edu.vku.roombooking",
       "supportsTablet": true
     },
     "android": {
+      "package": "vn.edu.vku.roombooking",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#1E3A5F",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
-      },
-      "predictiveBackGestureEnabled": false
+      }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "favicon": "./assets/favicon.png",
+      "name": "VKU Room Booking",
+      "shortName": "VKU Rooms",
+      "description": "Đặt phòng học thông minh - Trường ĐH CNTT & TT Việt Hàn",
+      "themeColor": "#1E3A5F",
+      "backgroundColor": "#0A1628",
+      "bundler": "metro",
+      "output": "single"
+    },
+    "extra": {
+      "apiUrl": "https://vku-room-booking.pages.dev"
+    },
+    "plugins": [
+      "expo-web-browser",
+      "expo-secure-store",
+      "expo-image",
+      "expo-font"
+    ]
   }
 }

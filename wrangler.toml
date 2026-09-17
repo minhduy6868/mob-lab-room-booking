@@ -1,0 +1,11 @@
+name = "vku-room-booking"
+compatibility_date = "2026-09-17"
+pages_build_output_dir = "dist"
+
+# Free Cloudflare Pages host: https://vku-room-booking.pages.dev
+# Bookings live in Cloudflare KV (same pattern as btmob TROVEY_RECORDS).
+
+[[kv_namespaces]]
+binding = "VKU_BOOKINGS"
+id = "16a359ee984c45f68de3bf120c44926d"
+preview_id = "16a359ee984c45f68de3bf120c44926d"
