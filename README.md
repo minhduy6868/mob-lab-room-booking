@@ -10,7 +10,7 @@
 **Live:** https://vku-room-booking.pages.dev/  
 **API health:** https://vku-room-booking.pages.dev/api/health  
 **GitHub:** https://github.com/minhduy6868/mob-lab-room-booking  
-**Báo cáo:** [docs/Mini-Project-Week05-Technical-Report.md](docs/Mini-Project-Week05-Technical-Report.md)
+**Báo cáo tuần 5 (PDF):** [docs/Mini-Project-Week05-Technical-Report.pdf](docs/Mini-Project-Week05-Technical-Report.pdf)
 
 ---
 

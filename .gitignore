@@ -37,7 +37,8 @@ yarn-error.*
 
 # tunnel QR (ephemeral)
 expo-go-qr.png
-.wrangler/
+# generated report screenshots
+docs/evidence/
 
 # typescript
 *.tsbuildinfo
