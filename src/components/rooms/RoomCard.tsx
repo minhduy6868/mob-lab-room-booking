@@ -1,21 +1,25 @@
 import React from 'react';
-import { View, Text, StyleSheet, Pressable, ViewStyle, StyleProp, Alert } from 'react-native';
+import { View, Text, StyleSheet, Pressable, ViewStyle, StyleProp } from 'react-native';
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
+import Animated, { FadeInDown, FadeOutUp, Layout } from 'react-native-reanimated';
 import { Room } from '../../types';
 import { THEME } from '../../constants/theme';
 import { useBookingStore } from '../../store/useBookingStore';
 import { useAuthStore } from '../../store/useAuthStore';
 import { decorateSlots } from '../../lib/booking-rules';
+import { notify } from '../../lib/confirm';
 
 interface RoomCardProps {
   room: Room;
+  index?: number;
   style?: StyleProp<ViewStyle>;
   onSelect?: (room: Room) => void;
 }
 
 export const RoomCard = React.memo(function RoomCard({
   room,
+  index = 0,
   style,
   onSelect,
 }: RoomCardProps) {
@@ -29,7 +33,7 @@ export const RoomCard = React.memo(function RoomCard({
 
   const handlePress = () => {
     if (isMaintenance) {
-      Alert.alert('Phòng đang bảo trì', `${room.name} tạm đóng để bảo trì thiết bị. Vui lòng chọn phòng khác.`);
+      notify('Phòng đang bảo trì', `${room.name} tạm đóng để bảo trì thiết bị. Vui lòng chọn phòng khác.`, 'warning');
       return;
     }
     if (onSelect) {
@@ -40,7 +44,7 @@ export const RoomCard = React.memo(function RoomCard({
   };
 
   const handleLongPress = () => {
-    Alert.alert(room.name, `${room.building}\nSức chứa: ${room.capacity} chỗ\n\n${room.description}`);
+    notify(room.name, `${room.building}\nSức chứa: ${room.capacity} chỗ\n\n${room.description}`);
   };
 
   const getStatusBadge = () => {
@@ -99,119 +103,126 @@ export const RoomCard = React.memo(function RoomCard({
 
   const statusBadge = getStatusBadge();
   const categoryInfo = getCategoryLabel();
+  const entryDelay = Math.min(index, 8) * 70;
 
   return (
-    <Pressable
-      style={({ pressed }) => [
-        styles.card,
-        style,
-        pressed && styles.cardPressed,
-      ]}
-      onPress={handlePress}
-      onLongPress={handleLongPress}
-      hitSlop={8}
-      android_ripple={{ color: 'rgba(0, 0, 0, 0.05)', borderless: false }}
+    <Animated.View
+      entering={FadeInDown.delay(entryDelay).springify()}
+      exiting={FadeOutUp.duration(180)}
+      layout={Layout.springify()}
+      style={style}
     >
-      {/* Room Photo matching slide 16 */}
-      <View style={styles.imageContainer}>
-          <Image
-            source={{ uri: room.image }}
-            style={styles.image}
-            contentFit="cover"
-            transition={200}
-          />
-        
-        {/* Dark overlay for contrast */}
-        <View style={styles.imageOverlay} />
+      <Pressable
+        style={({ pressed }) => [
+          styles.card,
+          pressed && styles.cardPressed,
+        ]}
+        onPress={handlePress}
+        onLongPress={handleLongPress}
+        hitSlop={8}
+        android_ripple={{ color: 'rgba(0, 0, 0, 0.05)', borderless: false }}
+      >
+        {/* Room Photo matching slide 16 */}
+        <View style={styles.imageContainer}>
+            <Image
+              source={{ uri: room.image }}
+              style={styles.image}
+              contentFit="cover"
+              transition={200}
+            />
+          
+          {/* Dark overlay for contrast */}
+          <View style={styles.imageOverlay} />
 
-        {/* Status Tag */}
-        <View style={[styles.statusTag, { backgroundColor: statusBadge.bg, borderColor: statusBadge.border }]}>
-          <View style={[styles.statusDot, { backgroundColor: statusBadge.color }]} />
-          <Text style={[styles.statusText, { color: statusBadge.color }]}>
-            {statusBadge.label}
-          </Text>
-        </View>
-
-        {/* Floor badge */}
-        <View style={styles.floorBadge}>
-          <Ionicons name="layers-outline" size={11} color="#FFFFFF" style={{ marginRight: 3 }} />
-          <Text style={styles.floorText}>Tầng {room.floor}</Text>
-        </View>
-      </View>
-
-      <View style={styles.content}>
-        {/* Category Pill */}
-        <View style={[styles.categoryPill, { backgroundColor: categoryInfo.bg }]}>
-          <Text style={[styles.categoryText, { color: categoryInfo.color }]}>
-            {categoryInfo.text}
-          </Text>
-        </View>
-
-        {/* Header with Name & Seats Badge matching slide 14 & 15 */}
-        <View style={styles.header}>
-          <Text style={styles.roomName} numberOfLines={1}>
-            {room.name}
-          </Text>
-          <View style={styles.badge}>
-            <Ionicons name="people-outline" size={12} color="#FFFFFF" style={{ marginRight: 4 }} />
-            <Text style={styles.badgeText}>{room.capacity} chỗ</Text>
-          </View>
-        </View>
-
-        {/* Location with vector icon instead of raw emoji */}
-        <View style={styles.locationRow}>
-          <Ionicons name="location-sharp" size={13} color={THEME.colors.primaryLight} style={{ marginRight: 4 }} />
-          <Text style={styles.location} numberOfLines={1}>
-            {room.building}
-          </Text>
-        </View>
-
-        {/* Amenities preview */}
-        <View style={styles.amenitiesRow}>
-          {room.amenities.slice(0, 3).map((amenity, idx) => (
-            <View key={idx} style={styles.amenityChip}>
-              <Ionicons name="checkmark-circle-outline" size={11} color={THEME.colors.primaryLight} style={{ marginRight: 3 }} />
-              <Text style={styles.amenityText} numberOfLines={1}>
-                {amenity}
-              </Text>
-            </View>
-          ))}
-        </View>
-
-        {/* Occupancy visual indicator bar */}
-        <View style={styles.occupancySection}>
-          <View style={styles.occupancyHeader}>
-            <Text style={styles.occupancyLabel}>Tỉ lệ ca trống:</Text>
-            <Text style={[styles.occupancyValue, { color: statusBadge.color }]}>
-              {occupancyRatio}% ({availableSlotsCount}/{totalSlotsCount} ca)
+          {/* Status Tag */}
+          <View style={[styles.statusTag, { backgroundColor: statusBadge.bg, borderColor: statusBadge.border }]}>
+            <View style={[styles.statusDot, { backgroundColor: statusBadge.color }]} />
+            <Text style={[styles.statusText, { color: statusBadge.color }]}>
+              {statusBadge.label}
             </Text>
           </View>
-          <View style={styles.occupancyTrack}>
-            <View
-              style={[
-                styles.occupancyFill,
-                {
-                  width: `${occupancyRatio}%`,
-                  backgroundColor: statusBadge.color,
-                },
-              ]}
-            />
+
+          {/* Floor badge */}
+          <View style={styles.floorBadge}>
+            <Ionicons name="layers-outline" size={11} color="#FFFFFF" style={{ marginRight: 3 }} />
+            <Text style={styles.floorText}>Tầng {room.floor}</Text>
           </View>
         </View>
 
-        {/* Action button */}
-        <View style={styles.footer}>
-          <View style={styles.slotOverview}>
-            <Ionicons name="calendar-outline" size={14} color={THEME.colors.textSecondary} />
-            <Text style={styles.slotOverviewText}>Xem chi tiết ca học</Text>
+        <View style={styles.content}>
+          {/* Category Pill */}
+          <View style={[styles.categoryPill, { backgroundColor: categoryInfo.bg }]}>
+            <Text style={[styles.categoryText, { color: categoryInfo.color }]}>
+              {categoryInfo.text}
+            </Text>
           </View>
-          <View style={[styles.bookButton, isMaintenance && styles.bookButtonDisabled]}>
-            <Text style={styles.bookButtonText}>{isMaintenance ? 'Không đặt được' : 'Đặt phòng'}</Text>
-            <Ionicons name="chevron-forward" size={13} color="#FFFFFF" />
+
+          {/* Header with Name & Seats Badge matching slide 14 & 15 */}
+          <View style={styles.header}>
+            <Text style={styles.roomName} numberOfLines={1}>
+              {room.name}
+            </Text>
+            <View style={styles.badge}>
+              <Ionicons name="people-outline" size={12} color="#FFFFFF" style={{ marginRight: 4 }} />
+              <Text style={styles.badgeText}>{room.capacity} chỗ</Text>
+            </View>
+          </View>
+
+          {/* Location with vector icon instead of raw emoji */}
+          <View style={styles.locationRow}>
+            <Ionicons name="location-sharp" size={13} color={THEME.colors.primaryLight} style={{ marginRight: 4 }} />
+            <Text style={styles.location} numberOfLines={1}>
+              {room.building}
+            </Text>
+          </View>
+
+          {/* Amenities preview */}
+          <View style={styles.amenitiesRow}>
+            {room.amenities.slice(0, 3).map((amenity, idx) => (
+              <View key={idx} style={styles.amenityChip}>
+                <Ionicons name="checkmark-circle-outline" size={11} color={THEME.colors.primaryLight} style={{ marginRight: 3 }} />
+                <Text style={styles.amenityText} numberOfLines={1}>
+                  {amenity}
+                </Text>
+              </View>
+            ))}
+          </View>
+
+          {/* Occupancy visual indicator bar */}
+          <View style={styles.occupancySection}>
+            <View style={styles.occupancyHeader}>
+              <Text style={styles.occupancyLabel}>Tỉ lệ ca trống:</Text>
+              <Text style={[styles.occupancyValue, { color: statusBadge.color }]}>
+                {occupancyRatio}% ({availableSlotsCount}/{totalSlotsCount} ca)
+              </Text>
+            </View>
+            <View style={styles.occupancyTrack}>
+              <View
+                style={[
+                  styles.occupancyFill,
+                  {
+                    width: `${occupancyRatio}%`,
+                    backgroundColor: statusBadge.color,
+                  },
+                ]}
+              />
+            </View>
+          </View>
+
+          {/* Action button */}
+          <View style={styles.footer}>
+            <View style={styles.slotOverview}>
+              <Ionicons name="calendar-outline" size={14} color={THEME.colors.textSecondary} />
+              <Text style={styles.slotOverviewText}>Xem chi tiết ca học</Text>
+            </View>
+            <View style={[styles.bookButton, isMaintenance && styles.bookButtonDisabled]}>
+              <Text style={styles.bookButtonText}>{isMaintenance ? 'Không đặt được' : 'Đặt phòng'}</Text>
+              <Ionicons name="chevron-forward" size={13} color="#FFFFFF" />
+            </View>
           </View>
         </View>
-      </View>
-    </Pressable>
+      </Pressable>
+    </Animated.View>
   );
 });
 

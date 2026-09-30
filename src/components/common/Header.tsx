@@ -4,8 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { THEME } from '../../constants/theme';
 import { useBookingStore } from '../../store/useBookingStore';
 import { useAuthStore } from '../../store/useAuthStore';
-import { TODAY_STR, TOMORROW_STR } from '../../constants/mockRooms';
 import { navigateToMainTab } from '../../navigation/types';
+import { DateStrip } from './DateStrip';
 import { isActiveBooking } from '../../lib/booking-rules';
 
 interface HeaderProps {
@@ -13,7 +13,7 @@ interface HeaderProps {
 }
 
 export function Header({ showDateSwitcher = true }: HeaderProps) {
-  const { selectedDate, setSelectedDate, bookings, cloudReady } = useBookingStore();
+  const { bookings, cloudReady } = useBookingStore();
   const session = useAuthStore((s) => s.session);
   const studentId = session?.user.studentId;
   const activeBookingsCount = bookings.filter(
@@ -51,55 +51,15 @@ export function Header({ showDateSwitcher = true }: HeaderProps) {
       <View style={styles.systemStatusRow}>
         <View style={styles.pulseDot} />
         <Text style={styles.systemStatusText}>
-          Hệ thống Cloudflare KV realtime • 22 phòng VKU • {cloudReady ? 'đã nối' : 'đang nối'}
+          Cloudflare KV • 22 phòng VKU • {cloudReady ? 'đã nối' : 'đang nối'}
         </Text>
       </View>
 
       {showDateSwitcher && (
-      <View style={styles.dateRow}>
-        <Text style={styles.dateLabel}>Chọn ngày xem:</Text>
-        <View style={styles.datePills}>
-          <Pressable
-            style={[styles.datePill, selectedDate === TODAY_STR && styles.datePillActive]}
-            onPress={() => setSelectedDate(TODAY_STR)}
-          >
-            <Ionicons
-              name="today-outline"
-              size={13}
-              color={selectedDate === TODAY_STR ? '#FFFFFF' : THEME.colors.textSecondary}
-              style={{ marginRight: 4 }}
-            />
-            <Text
-              style={[
-                styles.datePillText,
-                selectedDate === TODAY_STR && styles.datePillTextActive,
-              ]}
-            >
-              Hôm nay ({TODAY_STR})
-            </Text>
-          </Pressable>
-
-          <Pressable
-            style={[styles.datePill, selectedDate === TOMORROW_STR && styles.datePillActive]}
-            onPress={() => setSelectedDate(TOMORROW_STR)}
-          >
-            <Ionicons
-              name="calendar-outline"
-              size={13}
-              color={selectedDate === TOMORROW_STR ? '#FFFFFF' : THEME.colors.textSecondary}
-              style={{ marginRight: 4 }}
-            />
-            <Text
-              style={[
-                styles.datePillText,
-                selectedDate === TOMORROW_STR && styles.datePillTextActive,
-              ]}
-            >
-              Ngày mai ({TOMORROW_STR})
-            </Text>
-          </Pressable>
+        <View style={styles.dateRow}>
+          <Text style={styles.dateLabel}>7 ngày:</Text>
+          <DateStrip />
         </View>
-      </View>
       )}
     </View>
   );

@@ -1,6 +1,6 @@
 import { AuthProvider, Booking, UserProfile } from '../types';
 
-export const CLOUDFLARE_PAGES_HOST = 'https://vku-room-booking.pages.dev';
+export const CLOUDFLARE_PAGES_HOST = 'https://vku-room-booking-part2.pages.dev';
 
 export function getApiBase(): string {
   const fromEnv = process.env.EXPO_PUBLIC_API_URL;

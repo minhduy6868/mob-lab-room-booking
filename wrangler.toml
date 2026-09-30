@@ -1,8 +1,9 @@
-name = "vku-room-booking"
+name = "vku-room-booking-part2"
 compatibility_date = "2026-09-17"
 pages_build_output_dir = "dist"
 
-# Free Cloudflare Pages host: https://vku-room-booking.pages.dev
+# Week 6 host: https://vku-room-booking-part2.pages.dev
+# Week 5 host stays at https://vku-room-booking.pages.dev
 # Bookings live in Cloudflare KV (same pattern as btmob TROVEY_RECORDS).
 
 [[kv_namespaces]]

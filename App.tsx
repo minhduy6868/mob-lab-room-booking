@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Platform, StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -13,6 +13,7 @@ import { SplashScreen } from './src/screens/SplashScreen';
 import { RootNavigator } from './src/navigation/RootNavigator';
 import { navigationRef } from './src/navigation/types';
 import { THEME } from './src/constants/theme';
+import { AppAlertProvider } from './src/components/common/AppAlert';
 
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -20,6 +21,20 @@ export default function App() {
   const [fontsLoaded, fontError] = useFonts({
     ...Ionicons.font,
   });
+
+  useEffect(() => {
+    if (Platform.OS === 'web') return;
+    void import('expo-notifications').then((Notifications) => {
+      Notifications.setNotificationHandler({
+        handleNotification: async () => ({
+          shouldShowBanner: true,
+          shouldShowList: true,
+          shouldPlaySound: false,
+          shouldSetBadge: false,
+        }),
+      });
+    });
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -52,10 +67,12 @@ export default function App() {
     <GestureHandlerRootView style={styles.root}>
       <SafeAreaProvider>
         <QueryClientProvider client={queryClient}>
-          <NavigationContainer ref={navigationRef}>
-            <StatusBar style="dark" />
-            <RootNavigator />
-          </NavigationContainer>
+          <AppAlertProvider>
+            <NavigationContainer ref={navigationRef}>
+              <StatusBar style="dark" />
+              <RootNavigator />
+            </NavigationContainer>
+          </AppAlertProvider>
         </QueryClientProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

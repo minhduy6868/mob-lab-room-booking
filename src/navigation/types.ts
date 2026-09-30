@@ -10,6 +10,8 @@ export type MainTabParamList = {
 export type RootStackParamList = {
   Login: undefined;
   Main: NavigatorScreenParams<MainTabParamList> | undefined;
+  RoomDetails: { roomId: string; roomName: string };
+  BookingConfirmation: { bookingId: string };
 };
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>();
@@ -17,4 +19,14 @@ export const navigationRef = createNavigationContainerRef<RootStackParamList>();
 export function navigateToMainTab(tab: keyof MainTabParamList) {
   if (!navigationRef.isReady()) return;
   navigationRef.navigate('Main', { screen: tab });
+}
+
+export function navigateToRoomDetails(roomId: string, roomName: string) {
+  if (!navigationRef.isReady()) return;
+  navigationRef.navigate('RoomDetails', { roomId, roomName });
+}
+
+export function navigateToBookingConfirmation(bookingId: string) {
+  if (!navigationRef.isReady()) return;
+  navigationRef.navigate('BookingConfirmation', { bookingId });
 }

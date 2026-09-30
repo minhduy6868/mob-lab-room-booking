@@ -35,13 +35,14 @@
       "output": "single"
     },
     "extra": {
-      "apiUrl": "https://vku-room-booking.pages.dev"
+      "apiUrl": "https://vku-room-booking-part2.pages.dev"
     },
     "plugins": [
       "expo-web-browser",
       "expo-secure-store",
       "expo-image",
-      "expo-font"
+      "expo-font",
+      "expo-notifications"
     ]
   }
 }

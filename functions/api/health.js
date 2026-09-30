@@ -14,8 +14,8 @@ export async function onRequestGet({ env }) {
     kv: true,
     kvCount: records.length,
     seed,
-    canonical: 'https://vku-room-booking.pages.dev/',
-    bookings: 'https://vku-room-booking.pages.dev/api/bookings',
+    canonical: 'https://vku-room-booking-part2.pages.dev/',
+    bookings: 'https://vku-room-booking-part2.pages.dev/api/bookings',
   });
 }
 

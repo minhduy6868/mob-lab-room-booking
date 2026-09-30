@@ -1,6 +1,7 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, Pressable } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { View, Text, StyleSheet, FlatList, Pressable, RefreshControl } from 'react-native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useQuery } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
 import { THEME } from '../constants/theme';
 import { useBookingStore, hoursFromBookings } from '../store/useBookingStore';
@@ -10,16 +11,57 @@ import { Header } from '../components/common/Header';
 import { isActiveBooking } from '../lib/booking-rules';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { MainTabParamList } from '../navigation/types';
+import { fetchLiveBookings, LIVE_BOOKINGS_QUERY_KEY } from '../api/query-client';
 
 export function MyBookingsScreen() {
   const navigation = useNavigation<BottomTabNavigationProp<MainTabParamList>>();
-  const { bookings, syncBookingLifecycles } = useBookingStore();
+  const bookings = useBookingStore((s) => s.bookings);
+  const replaceBookings = useBookingStore((s) => s.replaceBookings);
+  const syncBookingLifecycles = useBookingStore((s) => s.syncBookingLifecycles);
   const studentId = useAuthStore((s) => s.session?.user.studentId);
   const [filter, setFilter] = useState<'all' | 'active' | 'cancelled'>('all');
+  const {
+    data: liveBookings,
+    refetch,
+    isRefetching,
+  } = useQuery({
+    queryKey: LIVE_BOOKINGS_QUERY_KEY,
+    queryFn: fetchLiveBookings,
+    enabled: Boolean(studentId),
+    staleTime: 0,
+    refetchOnReconnect: true,
+    refetchOnWindowFocus: true,
+  });
 
   useEffect(() => {
     syncBookingLifecycles();
   }, [syncBookingLifecycles]);
+
+  useEffect(() => {
+    if (liveBookings) {
+      replaceBookings(liveBookings);
+    }
+  }, [liveBookings, replaceBookings]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!studentId) return;
+      syncBookingLifecycles();
+      void refetch().then((result) => {
+        if (result.data) {
+          replaceBookings(result.data);
+        }
+      });
+    }, [refetch, replaceBookings, studentId, syncBookingLifecycles])
+  );
+
+  const onRefresh = useCallback(async () => {
+    const result = await refetch();
+    if (result.data) {
+      replaceBookings(result.data);
+    }
+    syncBookingLifecycles();
+  }, [refetch, replaceBookings, syncBookingLifecycles]);
 
   const mine = useMemo(
     () => bookings.filter((booking) => booking.studentId === studentId),
@@ -88,6 +130,11 @@ export function MyBookingsScreen() {
         contentContainerStyle={styles.listContent}
         contentInsetAdjustmentBehavior="automatic"
         keyboardShouldPersistTaps="handled"
+        refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={onRefresh} />}
+        initialNumToRender={8}
+        maxToRenderPerBatch={6}
+        windowSize={5}
+        removeClippedSubviews={process.env.EXPO_OS !== 'web'}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>

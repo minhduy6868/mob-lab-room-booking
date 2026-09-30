@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet, Modal, Pressable, Alert } from 'react-native';
+import { View, Text, StyleSheet, Modal, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { THEME } from '../../constants/theme';
 import { useBookingStore } from '../../store/useBookingStore';
+import { notify } from '../../lib/confirm';
 
 export function QRCodePassModal() {
   const { selectedBookingForQR: booking, closeQRModal, checkInBooking } = useBookingStore();
@@ -14,10 +15,10 @@ export function QRCodePassModal() {
   const handleCheckIn = async () => {
     const result = await checkInBooking(booking.id);
     if (!result.success) {
-      Alert.alert('Không thể check-in', result.message);
+      notify('Không thể check-in', result.message, 'danger');
       return;
     }
-    Alert.alert('Check-in thành công', result.message);
+    notify('Check-in thành công', result.message, 'success');
   };
 
   return (

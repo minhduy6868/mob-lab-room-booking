@@ -3,17 +3,18 @@ import { INITIAL_USER } from './accounts';
 
 export { INITIAL_USER };
 
-export const TODAY_STR = (() => {
+function dateKey(offsetDays: number): string {
   const now = new Date();
+  now.setDate(now.getDate() + offsetDays);
   const year = now.getFullYear();
   const month = String(now.getMonth() + 1).padStart(2, '0');
   const day = String(now.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
-})();
+}
 
-const tomorrow = new Date();
-tomorrow.setDate(tomorrow.getDate() + 1);
-export const TOMORROW_STR = `${tomorrow.getFullYear()}-${String(tomorrow.getMonth() + 1).padStart(2, '0')}-${String(tomorrow.getDate()).padStart(2, '0')}`;
+export const WEEK_DATES = Array.from({ length: 7 }, (_, offset) => dateKey(offset));
+export const TODAY_STR = WEEK_DATES[0];
+export const TOMORROW_STR = WEEK_DATES[1];
 
 export const STANDARD_SLOTS: Omit<TimeSlot, 'status' | 'bookedBy' | 'purpose'>[] = [
   { id: 'slot-1', startTime: '07:30', endTime: '09:30', label: 'Ca 1 (07:30 - 09:30)' },
@@ -36,10 +37,11 @@ function generateSlotsForRoom(occupiedSlotIndices: number[] = []): Record<string
       };
     });
 
-  return {
-    [TODAY_STR]: buildSlots(occupiedSlotIndices),
-    [TOMORROW_STR]: buildSlots(occupiedSlotIndices.map((i) => (i + 1) % 6)),
-  };
+  const slots: Record<string, TimeSlot[]> = {};
+  for (let day = 0; day < 7; day += 1) {
+    slots[dateKey(day)] = buildSlots(occupiedSlotIndices.map((index) => (index + day) % 6));
+  }
+  return slots;
 }
 
 export const INITIAL_ROOMS: Room[] = [

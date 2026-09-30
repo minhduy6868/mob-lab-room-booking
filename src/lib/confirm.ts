@@ -1,23 +1,23 @@
-import { Alert } from 'react-native';
+import { AppAlertTone, showAppConfirm, showAppNotice } from './app-alert';
 
-export function confirmAction(title: string, message: string, confirmLabel: string, onConfirm: () => void) {
-  if (process.env.EXPO_OS === 'web' && typeof window !== 'undefined') {
-    if (window.confirm(`${title}\n\n${message}`)) {
-      onConfirm();
-    }
-    return;
-  }
-
-  Alert.alert(title, message, [
-    { text: 'Hủy', style: 'cancel' },
-    { text: confirmLabel, style: 'destructive', onPress: onConfirm },
-  ]);
+export function confirmAction(
+  title: string,
+  message: string,
+  confirmLabel: string,
+  onConfirm: () => void,
+  tone?: AppAlertTone
+) {
+  const dangerAction = /hủy|huỷ|xóa|xoá/i.test(confirmLabel);
+  showAppConfirm({
+    title,
+    message,
+    confirmText: confirmLabel,
+    cancelText: 'Hủy',
+    tone: tone ?? (dangerAction ? 'danger' : 'info'),
+    onConfirm,
+  });
 }
 
-export function notify(title: string, message: string) {
-  if (process.env.EXPO_OS === 'web' && typeof window !== 'undefined') {
-    window.alert(`${title}\n\n${message}`);
-    return;
-  }
-  Alert.alert(title, message);
+export function notify(title: string, message: string, tone: AppAlertTone = 'info') {
+  showAppNotice({ title, message, tone });
 }

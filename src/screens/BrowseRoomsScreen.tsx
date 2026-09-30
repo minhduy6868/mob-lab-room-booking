@@ -12,23 +12,27 @@ import { Header } from '../components/common/Header';
 import { RoomCard } from '../components/rooms/RoomCard';
 import { Room } from '../types';
 import { decorateSlots } from '../lib/booking-rules';
+import { matchesCapacity, matchesEquipment } from '../lib/room-filters';
 import { fetchRoomCatalog } from '../api/query-client';
+import { navigateToRoomDetails } from '../navigation/types';
 
 export function BrowseRoomsScreen() {
-  const {
-    rooms,
-    replaceRooms,
-    bookings,
-    searchQuery,
-    setSearchQuery,
-    selectedCategory,
-    setSelectedCategory,
-    selectedBuilding,
-    setSelectedBuilding,
-    selectedStatus,
-    setSelectedStatus,
-    selectedDate,
-  } = useBookingStore();
+  const rooms = useBookingStore((s) => s.rooms);
+  const replaceRooms = useBookingStore((s) => s.replaceRooms);
+  const bookings = useBookingStore((s) => s.bookings);
+  const searchQuery = useBookingStore((s) => s.searchQuery);
+  const setSearchQuery = useBookingStore((s) => s.setSearchQuery);
+  const selectedCategory = useBookingStore((s) => s.selectedCategory);
+  const setSelectedCategory = useBookingStore((s) => s.setSelectedCategory);
+  const selectedBuilding = useBookingStore((s) => s.selectedBuilding);
+  const setSelectedBuilding = useBookingStore((s) => s.setSelectedBuilding);
+  const selectedStatus = useBookingStore((s) => s.selectedStatus);
+  const setSelectedStatus = useBookingStore((s) => s.setSelectedStatus);
+  const selectedCapacity = useBookingStore((s) => s.selectedCapacity);
+  const setSelectedCapacity = useBookingStore((s) => s.setSelectedCapacity);
+  const selectedEquipment = useBookingStore((s) => s.selectedEquipment);
+  const setSelectedEquipment = useBookingStore((s) => s.setSelectedEquipment);
+  const selectedDate = useBookingStore((s) => s.selectedDate);
   const studentId = useAuthStore((s) => s.session?.user.studentId);
   const { columns, cardWidth, horizontalPadding, cardGap } = useResponsiveLayout();
 
@@ -77,21 +81,45 @@ export function BrowseRoomsScreen() {
         return false;
       }
 
+      if (!matchesCapacity(room, selectedCapacity)) {
+        return false;
+      }
+      if (!matchesEquipment(room, selectedEquipment)) {
+        return false;
+      }
+
       return true;
     });
-  }, [rooms, bookings, searchQuery, selectedCategory, selectedBuilding, selectedStatus, selectedDate, studentId]);
+  }, [
+    rooms,
+    bookings,
+    searchQuery,
+    selectedCategory,
+    selectedBuilding,
+    selectedStatus,
+    selectedCapacity,
+    selectedEquipment,
+    selectedDate,
+    studentId,
+  ]);
 
   const handleResetFilters = () => {
     setSearchQuery('');
     setSelectedCategory('all');
     setSelectedBuilding('all');
     setSelectedStatus('all');
+    setSelectedCapacity('all');
+    setSelectedEquipment('all');
   };
 
   const renderItem = useCallback(
-    ({ item }: { item: Room }) => (
+    ({ item, index }: { item: Room; index: number }) => (
       <View style={{ width: cardWidth, marginBottom: cardGap }}>
-        <RoomCard room={item} />
+        <RoomCard
+          room={item}
+          index={index}
+          onSelect={(room) => navigateToRoomDetails(room.id, room.name)}
+        />
       </View>
     ),
     [cardWidth, cardGap]
@@ -117,6 +145,8 @@ export function BrowseRoomsScreen() {
         {(selectedCategory !== 'all' ||
           selectedBuilding !== 'all' ||
           selectedStatus !== 'all' ||
+          selectedCapacity !== 'all' ||
+          selectedEquipment !== 'all' ||
           searchQuery.length > 0) && (
           <Pressable onPress={handleResetFilters} hitSlop={6}>
             <Text style={styles.resetFilterText}>Đặt lại bộ lọc</Text>

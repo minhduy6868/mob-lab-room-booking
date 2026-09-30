@@ -15,7 +15,7 @@ import { THEME } from '../../constants/theme';
 import { confirmAction } from '../../lib/confirm';
 import { useBookingStore } from '../../store/useBookingStore';
 import { useAuthStore } from '../../store/useAuthStore';
-import { TODAY_STR, TOMORROW_STR } from '../../constants/mockRooms';
+import { DateStrip } from '../common/DateStrip';
 import {
   decorateSlots,
   getActiveBookingsForDay,
@@ -23,7 +23,7 @@ import {
   slotConflictHint,
 } from '../../lib/booking-rules';
 import { isSlotInPast } from '../../lib/time';
-import { navigateToMainTab } from '../../navigation/types';
+import { navigateToBookingConfirmation } from '../../navigation/types';
 
 const PURPOSE_SUGGESTIONS = [
   'Học nhóm đồ án môn học',
@@ -38,10 +38,8 @@ export function BookingModal() {
     selectedRoomForBooking: room,
     closeBookingModal,
     selectedDate,
-    setSelectedDate,
     bookRoomSlot,
     bookings,
-    openQRModal,
   } = useBookingStore();
   const session = useAuthStore((s) => s.session);
   const user = session?.user;
@@ -125,8 +123,7 @@ export function BookingModal() {
       setSelectedSlotId(null);
       setErrorMessage(null);
       if (result.booking) {
-        navigateToMainTab('Bookings');
-        openQRModal(result.booking);
+        navigateToBookingConfirmation(result.booking.id);
       }
     } else {
       setErrorMessage(result.message);
@@ -309,54 +306,12 @@ export function BookingModal() {
             {/* Date Switcher */}
             <View style={styles.sectionBox}>
               <Text style={styles.sectionTitle}>1. Chọn ngày đặt phòng</Text>
-              <View style={styles.dateButtons}>
-                <Pressable
-                  style={[styles.dateButton, selectedDate === TODAY_STR && styles.dateButtonActive]}
-                  onPress={() => {
-                    setSelectedDate(TODAY_STR);
-                    setSelectedSlotId(null);
-                    setErrorMessage(null);
-                  }}
-                >
-                  <Ionicons
-                    name="today-outline"
-                    size={16}
-                    color={selectedDate === TODAY_STR ? '#FFFFFF' : THEME.colors.textSecondary}
-                    style={{ marginRight: 6 }}
-                  />
-                  <Text
-                    style={[
-                      styles.dateBtnText,
-                      selectedDate === TODAY_STR && styles.dateBtnTextActive,
-                    ]}
-                  >
-                    Hôm nay ({TODAY_STR})
-                  </Text>
-                </Pressable>
-                <Pressable
-                  style={[styles.dateButton, selectedDate === TOMORROW_STR && styles.dateButtonActive]}
-                  onPress={() => {
-                    setSelectedDate(TOMORROW_STR);
-                    setSelectedSlotId(null);
-                    setErrorMessage(null);
-                  }}
-                >
-                  <Ionicons
-                    name="calendar-outline"
-                    size={16}
-                    color={selectedDate === TOMORROW_STR ? '#FFFFFF' : THEME.colors.textSecondary}
-                    style={{ marginRight: 6 }}
-                  />
-                  <Text
-                    style={[
-                      styles.dateBtnText,
-                      selectedDate === TOMORROW_STR && styles.dateBtnTextActive,
-                    ]}
-                  >
-                    Ngày mai ({TOMORROW_STR})
-                  </Text>
-                </Pressable>
-              </View>
+              <DateStrip
+                onSelect={() => {
+                  setSelectedSlotId(null);
+                  setErrorMessage(null);
+                }}
+              />
             </View>
 
             {dailyLimitReached && (

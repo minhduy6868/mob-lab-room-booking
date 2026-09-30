@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { THEME } from '../../constants/theme';
+import { CapacityFilter, EquipmentFilter } from '../../lib/room-filters';
 import { useBookingStore } from '../../store/useBookingStore';
 
 const CATEGORIES = [
@@ -13,6 +14,20 @@ const CATEGORIES = [
   { id: 'makerspace', label: 'MakerSpace & IoT', icon: 'hardware-chip-outline' as const },
   { id: 'meeting', label: 'Phòng họp nhóm', icon: 'people-outline' as const },
   { id: 'studio', label: 'Studio & Media', icon: 'videocam-outline' as const },
+];
+
+const CAPACITIES: { id: CapacityFilter; label: string }[] = [
+  { id: 'all', label: 'Mọi sức chứa' },
+  { id: '2-20', label: '2–20 chỗ' },
+  { id: 'over-20', label: 'Trên 20 chỗ' },
+];
+
+const EQUIPMENT: { id: EquipmentFilter; label: string }[] = [
+  { id: 'all', label: 'Mọi thiết bị' },
+  { id: 'projector', label: 'Máy chiếu' },
+  { id: 'whiteboard', label: 'Bảng' },
+  { id: 'pc', label: 'PC cấu hình cao' },
+  { id: 'ac', label: 'Điều hòa' },
 ];
 
 const BUILDINGS = [
@@ -33,6 +48,10 @@ export function FilterChips() {
     setSelectedBuilding,
     selectedStatus,
     setSelectedStatus,
+    selectedCapacity,
+    setSelectedCapacity,
+    selectedEquipment,
+    setSelectedEquipment,
   } = useBookingStore();
 
   return (
@@ -129,6 +148,39 @@ export function FilterChips() {
                 <Text style={[styles.subPillText, isActive && styles.subPillTextActive]}>
                   {b.label}
                 </Text>
+              </Pressable>
+            );
+          })}
+        </ScrollView>
+      </View>
+
+      <View style={styles.secondaryRow}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.subScrollList}
+        >
+          {CAPACITIES.map((item) => {
+            const isActive = selectedCapacity === item.id;
+            return (
+              <Pressable
+                key={item.id}
+                style={[styles.subPill, isActive && styles.subPillActive]}
+                onPress={() => setSelectedCapacity(item.id)}
+              >
+                <Text style={[styles.subPillText, isActive && styles.subPillTextActive]}>{item.label}</Text>
+              </Pressable>
+            );
+          })}
+          {EQUIPMENT.filter((item) => item.id !== 'all').map((item) => {
+            const isActive = selectedEquipment === item.id;
+            return (
+              <Pressable
+                key={item.id}
+                style={[styles.subPill, isActive && styles.subPillActive]}
+                onPress={() => setSelectedEquipment(isActive ? 'all' : item.id)}
+              >
+                <Text style={[styles.subPillText, isActive && styles.subPillTextActive]}>{item.label}</Text>
               </Pressable>
             );
           })}

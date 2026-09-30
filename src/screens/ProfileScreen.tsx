@@ -159,7 +159,7 @@ export function ProfileScreen() {
           <View style={styles.techRow}>
             <Text style={styles.techKey}>Domain:</Text>
             <Text style={styles.techVal} selectable>
-              vku-room-booking.pages.dev
+              vku-room-booking-part2.pages.dev
             </Text>
           </View>
           <View style={styles.techRow}>

@@ -17,13 +17,8 @@ export function MainTabs() {
   const hydrateFromCloud = useBookingStore((s) => s.hydrateFromCloud);
 
   useEffect(() => {
-    hydrateFromCloud();
+    void hydrateFromCloud();
     syncBookingLifecycles();
-    const timer = setInterval(() => {
-      void hydrateFromCloud();
-      syncBookingLifecycles();
-    }, 2500);
-    return () => clearInterval(timer);
   }, [hydrateFromCloud, syncBookingLifecycles]);
 
   return (
