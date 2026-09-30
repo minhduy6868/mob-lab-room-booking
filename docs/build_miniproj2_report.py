@@ -183,22 +183,22 @@ def build(shots: dict[str, Path]) -> None:
         ("Course", "Cross-Platform Mobile App Development (VKU)"),
         ("Title", "Real-time Study Room Booking App (React Native & Expo)"),
         ("Weeks", "5-6    Weight: 10%"),
-        ("Student", "Nguyễn Văn Duy — 23IT038 — abc@vku.udn.vn"),
-        ("Date", "30/09/2026"),
+        ("Student", "Nguyễn Minh Duy — 23IT038 — abc@vku.udn.vn"),
+        ("Date", "01/10/2026"),
     ]:
         pdf.kv(label, value)
     pdf.ln(1)
 
     pdf.h1("1. GENERAL INFORMATION & DELIVERABLE LINKS")
     pdf.body(
-        "Solo project. Nguyễn Văn Duy (23IT038) built the Expo app, booking rules, Cloudflare KV API, and this report. Contribution: 100%."
+        "Solo project. Nguyễn Minh Duy (23IT038) built the Expo app, booking rules, Cloudflare KV API, and this report. Contribution: 100%."
     )
     pdf.kv("Live Demo URL", "https://vku-room-booking-part2.pages.dev/")
     pdf.kv("API health", "https://vku-room-booking-part2.pages.dev/api/health")
     pdf.kv("GitHub", "https://github.com/minhduy6868/mob-lab-room-booking")
     pdf.kv("Video", "Not recorded. The live URL is the demo deliverable.")
     pdf.body(
-        "Demo login is pre-filled: abc@vku.udn.vn / vku@2026 (Nguyễn Văn Duy, 23IT038). "
+        "Demo login is pre-filled: abc@vku.udn.vn / vku@2026 (Nguyễn Minh Duy, 23IT038). "
         "Week 5 remains at https://vku-room-booking.pages.dev/. Week 6 is the part2 host above."
     )
 
@@ -290,7 +290,7 @@ def build(shots: dict[str, Path]) -> None:
 
     pdf.h1("4. SCREENSHOTS")
     pdf.body(
-        "Captured from https://vku-room-booking-part2.pages.dev/ at 390x844 on 30/09/2026. Login used the pre-filled demo account."
+        "Captured from https://vku-room-booking-part2.pages.dev/ at 390x844. Login used the pre-filled demo account."
     )
     pair_figures(
         pdf,
@@ -309,13 +309,25 @@ def build(shots: dict[str, Path]) -> None:
     if len(shots) < 4:
         pdf.body("Some screenshots were not captured in this run. Use the live URL with the demo account above.")
 
-    pdf.h1("5. NOTES")
+    pdf.h1("5. WORK BEYOND THE BRIEF")
     pdf.body(
-        "GitHub origin/main is still the Week 5 commit (56ed666). The Week 6 app is what is deployed on the part2 URL. Push the local tree before the repository itself is graded."
+        "The brief requires a fast Expo list, Zustand, slot conflicts, and a 15-minute reminder. This build adds the following, each tied to a file a reader can open."
     )
     pdf.body(
-        "KV list() is briefly delayed after a write, so a second device can miss a booking for a few seconds until focus or pull-to-refresh. "
-        "The web host cannot fire expo-notifications; the reminder code runs on iOS and Android."
+        "Typed navigation. RootNavigator is a native stack over bottom tabs. RoomDetails receives { roomId, roomName }. BookingConfirmation receives { bookingId } and is presented as a modal, so the pass covers the tab bar. Route params are RootStackParamList, not untyped strings."
+    )
+    pdf.body(
+        "Server state is separate from UI state. useAuthStore and useBookingStore keep the session, filters, and the open booking. TanStack Query keeps the room catalog and the booking cache. After POST or PUT, the JSON booking returned by Cloudflare is upserted into both Zustand and the query cache. The screen updates from that response. A second browser catches up on focus, reconnect, or pull-to-refresh. The old 2.5 second poll is gone."
+    )
+    pdf.body(
+        "The conflict engine runs twice. src/lib/booking-rules.ts blocks a taken slot, a personal overlap, a third slot on the same day, a past slot, and a room in maintenance before the request is sent. functions/_lib/rules.js applies the same rules on POST, so another client cannot skip the UI. Cancel is refused inside 30 minutes of the start. Check-in opens 10 minutes before the slot."
+    )
+    pdf.body(
+        "Motion stays on the UI thread. Room cards use Reanimated FadeInDown, FadeOutUp, and a spring layout. Booking cards use Gesture.Pan: a left swipe past 120px opens the same cancel confirmation as the button. FlatList windowing (windowSize 5, initialNumToRender 10) and a memoized RoomCard keep the 22-room feed from re-rendering every card on each keystroke."
+    )
+    pdf.h1("6. LIMITS")
+    pdf.body(
+        "Cloudflare KV list() can lag a few seconds after a write, so a second device may not see a new booking until focus or pull-to-refresh. expo-notifications schedules the 15-minute check-in alert on iOS and Android; the Pages web demo does not show an operating-system notification. Public repository: https://github.com/minhduy6868/mob-lab-room-booking"
     )
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
@@ -324,6 +336,12 @@ def build(shots: dict[str, Path]) -> None:
 
 
 if __name__ == "__main__":
-    shots = try_shots()
+    saved = {
+        "login": EVIDENCE / "mp2-01-login.png",
+        "browse": EVIDENCE / "mp2-02-browse.png",
+        "details": EVIDENCE / "mp2-03-details.png",
+        "bookings": EVIDENCE / "mp2-04-bookings.png",
+    }
+    shots = saved if all(path.exists() for path in saved.values()) else try_shots()
     print("shots", sorted(shots))
     build(shots)

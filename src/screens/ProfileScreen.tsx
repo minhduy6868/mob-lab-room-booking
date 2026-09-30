@@ -22,7 +22,7 @@ export function ProfileScreen() {
   const handleLogout = () => {
     confirmAction(
       'Đăng xuất',
-      'Bạn sẽ cần đăng nhập lại bằng Google (Nguyễn Văn Duy) hoặc email.',
+      'Bạn sẽ cần đăng nhập lại bằng Google (Nguyễn Minh Duy) hoặc email.',
       'Đăng xuất',
       () => {
         void logout();
@@ -181,7 +181,7 @@ export function ProfileScreen() {
         <Text style={styles.sectionHeader}>Kịch bản demo (chấm bài)</Text>
         <View style={styles.rulesCard}>
           <Text style={styles.ruleText}>
-            Tài khoản mặc định: Nguyễn Văn Duy — 23IT038 — abc@vku.udn.vn. Mật khẩu: {DEMO_PASSWORD}.
+            Tài khoản mặc định: Nguyễn Minh Duy — 23IT038 — abc@vku.udn.vn. Mật khẩu: {DEMO_PASSWORD}.
           </Text>
           <Text style={styles.ruleText}>
             Thử: đặt trùng ca với phòng khác, đặt slot Huy đang giữ, vượt 2 ca/ngày, đặt ca đã qua, hủy sát giờ, phòng bảo trì Lab Vi mạch.

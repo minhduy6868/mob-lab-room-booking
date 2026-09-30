@@ -2,7 +2,7 @@
 
 **Môn:** Cross-Platform Mobile App Development  
 **Tuần 6:** React Native Part 2 — Navigation, State, Query, Animations  
-**Sinh viên:** Nguyễn Văn Duy · 23IT038 · abc@vku.udn.vn  
+**Sinh viên:** Nguyễn Minh Duy · 23IT038 · abc@vku.udn.vn  
 **Ngày kiểm tra:** 30/09/2026  
 **Live Week 6:** https://vku-room-booking-part2.pages.dev/  
 **Live Week 5:** https://vku-room-booking.pages.dev/  

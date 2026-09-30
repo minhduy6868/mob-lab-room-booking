@@ -2,7 +2,7 @@
 
 **Môn:** Cross-Platform Mobile App Development (VKU)  
 **Tuần 6:** React Native Part 2 — Navigation, State, Query, Animations  
-**Sinh viên:** Nguyễn Văn Duy — 23IT038  
+**Sinh viên:** Nguyễn Minh Duy — 23IT038  
 **Email demo:** abc@vku.udn.vn · mật khẩu `vku@2026`
 
 Ứng dụng đặt phòng học, lab, thư viện trên campus VKU. Lịch đặt lưu Cloudflare KV. Sau khi đặt hoặc hủy, UI cập nhật từ response; máy khác kéo để làm mới hoặc mở lại màn lịch.
@@ -32,7 +32,7 @@ npx expo start
 |---|---|
 | Email | `abc@vku.udn.vn` |
 | MSSV | 23IT038 |
-| Họ tên | Nguyễn Văn Duy |
+| Họ tên | Nguyễn Minh Duy |
 | Mật khẩu | `vku@2026` |
 
 Tài khoản phụ (cùng mật khẩu) để thử trùng lịch: `minhnv.22it@vku.udn.vn`, `hanhtt.23it@vku.udn.vn`, `huylq.22ce@vku.udn.vn`.

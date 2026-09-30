@@ -96,7 +96,7 @@ def build() -> None:
     for label, value in [
         ("Course", "Cross-Platform Mobile App Development (VKU)"),
         ("Topic", "Week 6 - React Native Part 2: Navigation, State, Query, Animations"),
-        ("Student", "Nguyễn Văn Duy - 23IT038 - abc@vku.udn.vn"),
+        ("Student", "Nguyễn Minh Duy - 23IT038 - abc@vku.udn.vn"),
         ("Submission Date", "30/09/2026"),
         ("Live Demo", "https://vku-room-booking.pages.dev/"),
         ("Repository", "https://github.com/minhduy6868/mob-lab-room-booking"),
@@ -109,7 +109,7 @@ def build() -> None:
         "makerspaces and smart classrooms. Week 6 upgrades the Week 5 app with typed navigation, "
         "separated client/server state, realtime cache sync, native-feeling alerts, Reanimated motion and native gestures."
     )
-    pdf.body("Demo account: abc@vku.udn.vn / vku@2026 (Nguyễn Văn Duy - 23IT038).")
+    pdf.body("Demo account: abc@vku.udn.vn / vku@2026 (Nguyễn Minh Duy - 23IT038).")
 
     pdf.h1("2. WEEK 6 IMPLEMENTATION CHECKLIST")
     table(

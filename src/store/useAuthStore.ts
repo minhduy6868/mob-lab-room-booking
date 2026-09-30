@@ -132,7 +132,7 @@ export const useAuthStore = create<AuthState>()(
           /* still enter app */
         }
         applySession(set, user, 'demo');
-        return { success: true, message: 'Đăng nhập Nguyễn Văn Duy (23IT038).' };
+        return { success: true, message: 'Đăng nhập Nguyễn Minh Duy (23IT038).' };
       },
       logout: async () => {
         set({ session: null });

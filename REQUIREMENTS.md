@@ -1,7 +1,7 @@
 # VKU Room Booking — Week 6 React Native Part 2
 
 **Môn:** Cross-Platform Mobile App Development (VKU)  
-**Sinh viên:** Nguyễn Văn Duy · 23IT038
+**Sinh viên:** Nguyễn Minh Duy · 23IT038
 
 **Live (Week 6):** https://vku-room-booking-part2.pages.dev/  
 **Week 5:** https://vku-room-booking.pages.dev/  

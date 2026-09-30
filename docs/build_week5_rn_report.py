@@ -97,7 +97,7 @@ def try_shots() -> dict[str, Path]:
         return shots
     try:
         with sync_playwright() as p:
-            browser = p.chromium.launch(headless=True)
+            browser = p.chromium.launch(channel="chrome", headless=True)
             page = browser.new_page(viewport={"width": 390, "height": 844}, device_scale_factor=2)
             page.goto(live, wait_until="domcontentloaded", timeout=45000)
             page.wait_for_timeout(4000)
@@ -117,7 +117,7 @@ def try_shots() -> dict[str, Path]:
             browser.close()
     except Exception as exc:
         print("screenshot skip:", str(exc).encode("ascii", "replace").decode("ascii"))
-        return shots
+    return shots
 
 
 def pair_figures(pdf: Report, items: list[tuple[Path | None, str]]) -> None:
@@ -169,7 +169,7 @@ def build(shots: dict[str, Path]) -> None:
     meta = [
         ("Course", "Cross-Platform Mobile App Development (VKU)"),
         ("Mini-Project Title", "Mini-Project — Week 5 React Native (VKU Room Booking)"),
-        ("Team / Student Name", "Nguyễn Văn Duy"),
+        ("Team / Student Name", "Nguyễn Minh Duy"),
         ("Submission Date", "17/09/2026"),
     ]
     for k, v in meta:
@@ -183,7 +183,7 @@ def build(shots: dict[str, Path]) -> None:
     pdf.multi_cell(
         0,
         5,
-        "1. Nguyễn Văn Duy — Student ID: 23IT038 — Role: Solo (UI, Expo, booking rules, Cloudflare KV) — Contribution: 100%",
+        "1. Nguyễn Minh Duy — Student ID: 23IT038 — Role: Solo (UI, Expo, booking rules, Cloudflare KV) — Contribution: 100%",
     )
     pdf.ln(1)
     pdf.kv("Live Demo URL", "https://vku-room-booking.pages.dev/")
@@ -191,7 +191,7 @@ def build(shots: dict[str, Path]) -> None:
     pdf.kv("Video Demo", "Not submitted.")
     pdf.ln(1)
     pdf.body(
-        "Demo login (pre-filled): email abc@vku.udn.vn — password vku@2026 — profile Nguyễn Văn Duy / 23IT038."
+        "Demo login (pre-filled): email abc@vku.udn.vn — password vku@2026 — profile Nguyễn Minh Duy / 23IT038."
     )
 
     pdf.h1("2. FEATURE IMPLEMENTATION CHECKLIST")

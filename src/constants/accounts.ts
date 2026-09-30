@@ -12,7 +12,7 @@ export interface DemoAccount extends UserProfile {
 export const DEMO_ACCOUNTS: DemoAccount[] = [
   {
     studentId: '23IT038',
-    fullName: 'Nguyễn Văn Duy',
+    fullName: 'Nguyễn Minh Duy',
     email: 'abc@vku.udn.vn',
     faculty: 'Khoa Khoa học Máy tính (Faculty of Computer Science)',
     major: 'Công nghệ thông tin (Information Technology)',

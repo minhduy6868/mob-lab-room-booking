@@ -2,7 +2,7 @@
 
 **Course:** Cross-Platform Mobile App Development  
 **Week:** 5 — React Native (Expo)  
-**Student:** Nguyễn Văn Duy · 23IT038 · abc@vku.udn.vn  
+**Student:** Nguyễn Minh Duy · 23IT038 · abc@vku.udn.vn  
 **Live:** https://vku-room-booking.pages.dev/  
 **Repo:** https://github.com/minhduy6868/mob-lab-room-booking  
 **Date:** 17/09/2026
@@ -15,7 +15,7 @@ VKU Room Booking is a campus study-room reservation app. Students browse 22 room
 
 The assignment stack is Expo / React Native (SDK 57) with a web export on Cloudflare Pages — the same free-host pattern as the Week 3 Trovey PWA (`*.pages.dev` + KV).
 
-Demo account (pre-filled): **Nguyễn Văn Duy / 23IT038 / abc@vku.udn.vn**, password `vku@2026`.
+Demo account (pre-filled): **Nguyễn Minh Duy / 23IT038 / abc@vku.udn.vn**, password `vku@2026`.
 
 ## 2. FUNCTIONAL SCOPE
 

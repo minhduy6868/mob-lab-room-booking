@@ -27,7 +27,7 @@ export function GoogleAccountSheet({ visible, onClose, onSelect }: GoogleAccount
             <Text style={styles.title}>Chọn tài khoản Google</Text>
           </View>
           <Text style={styles.subtitle}>
-            Tài khoản sẵn: Nguyễn Văn Duy (23IT038) — abc@vku.udn.vn
+            Tài khoản sẵn: Nguyễn Minh Duy (23IT038) — abc@vku.udn.vn
           </Text>
 
           <ScrollView keyboardShouldPersistTaps="handled">

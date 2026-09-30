@@ -2,7 +2,7 @@ export const DEMO_PASSWORD = 'vku@2026';
 
 export const PRIMARY = {
   studentId: '23IT038',
-  fullName: 'Nguyễn Văn Duy',
+  fullName: 'Nguyễn Minh Duy',
   email: 'abc@vku.udn.vn',
   faculty: 'Khoa Khoa học Máy tính (Faculty of Computer Science)',
   major: 'Công nghệ thông tin (Information Technology)',

@@ -51,7 +51,7 @@ export function LoginScreen() {
   const handleDemo = () => {
     confirmAction(
       'Vào bằng tài khoản demo',
-      'Sẽ đăng nhập Nguyễn Văn Duy (23IT038) — abc@vku.udn.vn.',
+      'Sẽ đăng nhập Nguyễn Minh Duy (23IT038) — abc@vku.udn.vn.',
       'Tiếp tục',
       () => {
         void loginAsDemo().then(() => buzz('success'));
